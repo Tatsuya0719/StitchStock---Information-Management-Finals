@@ -1,5 +1,5 @@
 /**
- * StitchStock Bespoke Search & Guard
+ * StitchStock Search & Guard
  */
 document.addEventListener('DOMContentLoaded', () => {
     

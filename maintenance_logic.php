@@ -18,7 +18,7 @@ if (isset($_POST['reset_system'])) {
 
         $pdo->exec("PRAGMA foreign_keys = ON;");
 
-        $_SESSION['message'] = "System Reconciled: All registries and collections cleared.";
+        $_SESSION['message'] = "System Cleared: All registries and inventories reset.";
         header("Location: reports.php");
         exit();
     } catch (PDOException $e) {

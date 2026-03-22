@@ -1,58 +1,52 @@
-# 1\. Project Overview
+# StitchStock Ledger: System Documentation
 
-StitchStock is a custom-built Boutique Management System designed to handle inventory tracking, point-of-sale transactions, and financial reporting. It utilizes a PHP/SQLite stack to provide a fast, serverless experience that can be deployed locally via XAMPP.
+# 1\. Overview
 
-# 2\. Constraints & System Architecture
+The StitchStock Ledger is a specialized inventory management system (IMS) developed for clothiers. Unlike generic retail software, this system uses a "Journal" approach to inventory, where every stock change is treated as a ledger entry. The system provides real-time business intelligence through "Inventory Velocity" and "Risk Exposure" metrics, allowing a tailor to monitor material outflow and depletion rates through a minimalist, editorial-inspired interface.
 
-* Database: SQLite (stitchstock.db). This choice ensures portability, as the entire database resides in a single file within the project root.  
-* Environment: Built for XAMPP (Apache/MySQL stack), specifically utilizing PHP 8.2.  
-* UI/UX: Custom CSS-based sidebar navigation with a responsive grid layout for data cards and tables.
+# 2\. Constraints
 
-# 3\. Installation & Setup
+To maintain the integrity of the ledger, the following operational constraints are enforced:
 
-1. Server Placement: Move the StitchStock 2.0 folder into your local server's root directory (e.g., C:\\XAMPP\\htdocs\\).  
-2. Database Permission: Ensure the directory has write permissions so the SQLite engine can update stitchstock.db.  
-3. Access: Navigate to http://localhost/stitchstock%202.0/ in a web browser.
+* Referential Integrity: Categories cannot be deleted via standard protocols if they are linked to active products. The "Delete" function must be used to bypass this via temporary foreign-key suspension.  
+* Non-Negative Inventory: The system prevents "Short Selling." A sale cannot be processed if the requested quantity exceeds the current physical stock in the registry.  
+* Data Persistence: The system utilizes an SQLite flat-file database. While highly portable, it is limited to sequential write operations; concurrent high-volume transactions are not supported.  
+* Scale: The dashboard is optimized for a curated collection of up to 500 unique SKUs.
 
----
+# 3\. Setup Guide
 
-# 4\. Detailed File Explanation
+1. Environment: Ensure a PHP-enabled web server (XAMPP, WAMP, or NGINX) is running.  
+2. Download the repository and rename the folder into “StitchStock 2.0”.  
+3. Paste the folder into the htdocs folder (XAMPP root folder)
 
-## A. Global Includes (/includes)
+# 4\. How to Use
 
-* config.php: The primary database connection file using PDO (PHP Data Objects) to interface with the SQLite file.  
-* db\_connect.php: A secondary helper for database instantiation.  
-* header.php: Contains the HTML \<head\>, global CSS links, and the sidebar navigation menu seen on all pages.  
-* footer.php: Closes global HTML tags and includes common JavaScript files like main.js.
+* Initializing the Inventory: Navigate to Manage Categories. Create your categories (e.g., "Business Attire," "Casual Wear").  
+* Adding Stock: Use the Add Product form. Input the name, select the category, set the initial stock, and pricing per unit.  
+* Processing a Sale: Select an item from the dropdown in the Sales section. The "Stock Guard" will automatically check availability. Enter the quantity and "Finalize Transaction."  
+* Monitoring Health: Check the Dashboard.  
+  * Gold Bars indicate items reaching Low Stock.  
+  * Red Bars indicate Depleted Stock.
 
-## B. Core Functional Pages
+# 5\. File Definitions
 
-* index.php (Dashboard): Fetches real-time stats from the database. It includes logic for "Restock Alerts" by querying products where the quantity is below a set threshold.  
-* inventory.php: Displays the full list of apparel. It provides a central view of all stock currently stored in the system.  
-* sales\_form.php & process\_sale.php: The Point of Sale (POS) system. sales\_form.php captures user input, while process\_sale.php updates the stock levels and records the transaction in the Sales table.  
-* reports.php: The financial hub. It calculates Total Revenue using SUM(total) from the Sales table and lists recent transactions.
+* index.php (The Dashboard): The central intelligence hub. It calculates the 30-day movement velocity and displays the activity timeline.  
+* inventory.php: Displays the full inventory. It features an asynchronous search bar to filter the inventory instantly.  
+* manage\_categories.php: The configuration file for inventory classification.  
+* sales\_form.php: The transactional interface where inventory is decremented and revenue is recorded.  
+* maintenance\_logic.php: The system utility file used for resetting the database (Full Data Reset).  
+* assets/js/script.js: This file handles the live search logic and the real-time stock-check during sales.  
+* includes/db\_connect.php: The PDO (PHP Data Objects) connection string that links the logic to the SQLite database.
 
-## C. Data Management
+# 
 
-* add\_product\_form.php: The interface for entering new items into the boutique.  
-* edit\_form.php & edit.php: Handles stock updates. If a user clicks "Restock" on the dashboard, it passes a prod\_id to these files to modify existing records.  
-* delete.php: Handles product removal, governed by Foreign Key constraints to prevent breaking sales history.
+# 6\. Troubleshooting
 
-## D. System Maintenance
-
-* manage\_categories.php: Allows the user to create and view apparel categories (e.g., Shoes, Jackets).  
-* maintenance\_logic.php: The "Nuclear Option" logic. It processes the Full System Reset, which wipes both Sales and Products tables and resets auto-incrementing IDs.
-
-## E. Assets (/assets)
-
-* css/styles.css: Defines the modern "dark sidebar" aesthetic and the card-based layout for the reports.  
-* js/main.js: Handles frontend interactivity, such as the confirmation popups before deleting data or resetting the system.
-
----
-
-## 5\. Troubleshooting & FAQ
-
-* Error: 404 Not Found: This typically occurs if a file is called from the wrong directory or contains a space in the filename that isn't properly encoded.  
-* Error: No such column: This is a common SQL error caused by a mismatch between the PHP variable names (like $qty) and the actual SQLite table columns (like total).
-
+| Issue | Cause | Resolution |
+| :---- | :---- | :---- |
+| "Insufficient Stock" button locked | You are trying to sell more than the item stock. | Check the current stock in the Inventory. |
+| Search bar not filtering | The script.js file is not loading or the table class is missing. | Inspect the page (F12) to ensure script.js is linked in the header. |
+| Database is locked | Multiple processes are trying to write to the SQLite file at once. | Refresh the page and wait 1-2 seconds between transactions. |
+| Categories won't delete | Active products are still assigned to that category. | Use the "Delete" button in Manage Categories to force the deletion. |
+| Dashboard stats are 0% | No sales have been recorded in the last 30 days. | Process a test sale to initialize the movement velocity logic. |
 
