@@ -23,7 +23,7 @@ if (isset($_GET['id'])) {
 ?>
 
 <div class="header-flex">
-    <h1>Edit Apparel Item</h1>
+    <h1>Edit Item Details</h1>
     <a href="Inventory.php" class="btn-secondary" style="text-decoration: none; color: #64748b;">&larr; Back to Inventory</a>
 </div>
 

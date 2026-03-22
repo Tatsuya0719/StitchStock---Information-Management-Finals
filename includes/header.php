@@ -11,16 +11,24 @@
 <body>
 
     <div class="sidebar">
-        <div class="logo-area">StitchStock</div>
-        <ul class="nav-links">
-            <li><a href="index.php">Dashboard</a></li>
-            <li><a href="Inventory.php">Inventory</a></li>
-            <li><a href="sales_form.php">Point of Sale</a></li>
-            <li><a href="reports.php">Reports</a></li>
-        </ul>
-        
-        <div class="sidebar-footer" style="position: absolute; bottom: 20px; font-size: 0.7rem; color: #64748b;">
-            v1.0 Standard Edition
+        <div class="logo">
+            <h2 class="logo-text">StitchStock</h2>
+            <small style="letter-spacing: 2px; text-transform: uppercase; font-size: 0.6rem; color: #999;">
+                Admin Page v2.0
+            </small>
+        </div>
+
+        <nav style="margin-top: 3rem; display: flex; flex-direction: column;">
+            <a href="index.php" class="nav-link">Dashboard</a>
+            <a href="inventory.php" class="nav-link">Inventory List</a>
+            <a href="reports.php" class="nav-link">The Ledger</a>
+            <a href="sales_form.php" class="nav-link">Register Sales</a>
+        </nav>
+
+        <div style="margin-top: auto; padding-top: 2rem;">
+            <a href="add_product_form.php" class="btn-primary" style="background: var(--ledger-charcoal); color: white; display: block; text-align: center; text-decoration: none; padding: 12px; font-size: 0.7rem; letter-spacing: 1px;">
+                ADD NEW ITEM
+            </a>
         </div>
     </div>
 

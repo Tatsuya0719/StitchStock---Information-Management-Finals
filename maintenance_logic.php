@@ -3,26 +3,25 @@ include('includes/config.php');
 
 if (isset($_POST['reset_system'])) {
     try {
-        // We start a transaction to ensure either everything is deleted or nothing is
-        $pdo->beginTransaction();
+        // 1. Disable checks so we can wipe linked data
+        $pdo->exec("PRAGMA foreign_keys = OFF;"); 
 
-        // Step 1: Delete Sales first to avoid Foreign Key errors
-        $pdo->exec("DELETE FROM Sales");
-        
-        // Step 2: Delete all Products
-        $pdo->exec("DELETE FROM Products");
-        
-        // Step 3: Reset the ID counters so new items start at ID 1
-        $pdo->exec("DELETE FROM sqlite_sequence WHERE name='Sales' OR name='Products'");
+        // 2. Wipe all relevant tables
+        $pdo->exec("DELETE FROM Sales;");
+        $pdo->exec("DELETE FROM Products;");
+        $pdo->exec("DELETE FROM Categories;"); // The missing piece
 
-        $pdo->commit();
+        // 3. Reset the auto-increment counters (Keep the IDs starting at 1)
+        $pdo->exec("DELETE FROM sqlite_sequence WHERE name='Sales';");
+        $pdo->exec("DELETE FROM sqlite_sequence WHERE name='Products';");
+        $pdo->exec("DELETE FROM sqlite_sequence WHERE name='Categories';");
 
-        $_SESSION['message'] = "System reset successful! All data cleared.";
-        header("Location: index.php");
+        $pdo->exec("PRAGMA foreign_keys = ON;");
+
+        $_SESSION['message'] = "System Reconciled: All registries and collections cleared.";
+        header("Location: reports.php");
         exit();
-
-    } catch (Exception $e) {
-        $pdo->rollBack();
+    } catch (PDOException $e) {
         die("Reset Failed: " . $e->getMessage());
     }
 }
