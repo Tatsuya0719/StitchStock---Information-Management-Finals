@@ -7,6 +7,7 @@
     <title>StitchStock | Management System</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="assets/js/main.js" defer></script>
 </head>
 <body>
 

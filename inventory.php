@@ -11,6 +11,11 @@ $stmt = $pdo->query("SELECT p.*, c.cat_name FROM Products p JOIN Categories c ON
     </div>
 </div>
 
+<div style="margin-bottom: 30px;">
+    <input type="text" id="inventorySearch" placeholder="Search by SKU, Name, or Category..." 
+           style="width: 100%; padding: 15px; border: 1px solid #eee; font-family: 'Playfair Display', serif; font-size: 1rem; outline: none; background: #fff;">
+</div>
+
 <?php if(isset($_SESSION['message'])): ?>
     <div class="card" style="border-left: 4px solid #10b981; margin-bottom: 30px; font-size: 0.9rem; padding: 15px 25px;">
         <span style="color: #10b981; font-weight: 700;">Inventory Updated:</span> <?= $_SESSION['message']; unset($_SESSION['message']); ?>

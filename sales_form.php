@@ -14,7 +14,9 @@ $products = $pdo->query("SELECT * FROM Products WHERE stock_qty > 0")->fetchAll(
             <label style="display:block; text-transform: uppercase; font-size: 0.65rem; letter-spacing: 1.5px; color: #888; margin-bottom: 15px;">Select Clothing Item</label>
             <select name="prod_id" required style="width:100%; padding:15px; border: 1px solid #eee; background: #fff; font-size: 1rem;">
                 <?php foreach($products as $p): ?>
-                    <option value="<?= $p['prod_id'] ?>"><?= htmlspecialchars($p['prod_name']) ?> — $<?= number_format($p['unit_price'], 2) ?></option>
+                    <option value="<?= $p['prod_id'] ?>" data-stock="<?= $p['stock_qty'] ?>">
+                        <?= htmlspecialchars($p['prod_name']) ?> (Available: <?= $p['stock_qty'] ?>)
+                    </option>
                 <?php endforeach; ?>
             </select>
         </div>
